@@ -1,4 +1,4 @@
-import Component from './components/Component.js';
+import Component from './core/Component.js';
 import Input from './components/Input.js';
 import WordList from './components/WordList.js';
 import SelectedList from './components/SelectedList.js';
@@ -25,6 +25,7 @@ class App extends Component {
   handleSelectWord(e) {
     const { textContent } = e.target;
     const { selectedWords } = this.state;
+
     alert(textContent);
 
     if (selectedWords.includes(textContent)) return;
@@ -41,9 +42,11 @@ class App extends Component {
 
   mounted() {
     const { searchData, selectedWords } = this.state;
+
     const $form = this.$target.querySelector('.SearchInput');
     const $wordList = this.$target.querySelector('.Suggestion');
     const $selectedList = this.$target.querySelector('.SelectedLanguage');
+
     this.Input = new Input($form, { onInput: this.handleInput.bind(this) });
     this.WordList = new WordList($wordList, {
       data: searchData,

@@ -1,4 +1,4 @@
-import Component from './Component.js';
+import Component from '../core/Component.js';
 
 class SelectedList extends Component {
   setup() {

@@ -1,4 +1,4 @@
-import Component from '../components/Component.js';
+import Component from '../core/Component.js';
 
 class Input extends Component {
   template() {
