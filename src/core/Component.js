@@ -15,7 +15,7 @@ export default class Component {
   }
 
   setup() {
-    return;
+    this.setInitState();
   }
 
   createNode(tagName) {
@@ -63,12 +63,32 @@ export default class Component {
     this.mounted();
   }
 
-  reRender() {
+  childUpdate() {
     return;
   }
 
-  setState(newState, reRender = false) {
+  checkNeedRender(newState) {
+    let needRender = false;
+    const updateStateKey = Object.keys(newState);
+
+    updateStateKey.map((key) => {
+      if (
+        !(JSON.stringify(this.state[key]) === JSON.stringify(newState[key]))
+      ) {
+        needRender = true;
+      }
+    });
+
+    return needRender;
+  }
+
+  setState(newState, childUpdate = false) {
+    const needRender = this.checkNeedRender(newState);
+    if (!needRender) return;
+
     this.state = { ...this.state, ...newState };
-    reRender ? this.reRender() : this.render();
+    childUpdate ? this.childUpdate() : this.render();
   }
 }
+
+// 각 props의 속성 값을 구독 하려면 prop으로 넘겨받으면 안되고 직접 가져다가 써야함

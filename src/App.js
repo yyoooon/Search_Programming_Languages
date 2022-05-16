@@ -57,13 +57,19 @@ class App extends Component {
     });
   }
 
-  reRender() {
-    const { searchData, selectedWords } = this.state;
-    if (selectedWords.length > 5) {
-      selectedWords.shift();
+  limitFiveLength(arr) {
+    if (arr.length > 5) {
+      arr.shift();
     }
-    this.SelectedList.setState({ items: selectedWords });
+    return arr;
+  }
+
+  childUpdate() {
+    const { searchData, selectedWords } = this.state;
     this.WordList.setState({ data: searchData });
+    this.SelectedList.setState({
+      items: this.limitFiveLength(selectedWords),
+    });
   }
 }
 
