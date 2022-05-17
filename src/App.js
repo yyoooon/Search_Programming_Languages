@@ -22,14 +22,19 @@ class App extends Component {
     this.setState({ selectedWords: [...selectedWords, word] }, true);
   }
 
-  async handleInput(e) {
-    const { value } = e.target;
-    if (!value) {
-      this.setState({ searchData: [], selectedWords: [] }, true);
-      return;
-    }
-    const result = await getSearchResults(value);
-    this.setState({ searchData: result, currentInputText: value }, true);
+  time = null;
+  handleInput(e) {
+    if (this.time) clearTimeout(this.time);
+
+    this.time = setTimeout(async () => {
+      const { value } = e.target;
+      if (!value) {
+        this.setState({ searchData: [], selectedWords: [] }, true);
+        return;
+      }
+      const result = await getSearchResults(value);
+      this.setState({ searchData: result, currentInputText: value }, true);
+    }, 500);
   }
 
   handlePressKey(e) {
@@ -92,7 +97,6 @@ class App extends Component {
   }
 
   limitFiveLength(arr) {
-    // util로 뺌
     if (arr.length > 5) {
       arr.shift();
     }
@@ -106,11 +110,13 @@ class App extends Component {
       currentSelectedWordIndex,
       currentInputText,
     } = this.state;
+
     this.WordList.setState({
       data: searchData,
       currentSelectedIndex: currentSelectedWordIndex,
       currentInputText,
     });
+
     this.SelectedList.setState({
       items: this.limitFiveLength(selectedWords),
     });
