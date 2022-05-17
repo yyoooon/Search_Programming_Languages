@@ -14,9 +14,7 @@ export default class Component {
     this.fetch();
   }
 
-  setup() {
-    this.setInitState();
-  }
+  setup() {}
 
   createNode(tagName) {
     this.$node = createElement(tagName);

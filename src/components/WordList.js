@@ -1,38 +1,47 @@
 import Component from '../core/Component.js';
-import WordItem from './WordItem.js';
 
 class WordList extends Component {
   setup() {
     this.$target.style.display = 'none';
     this.state = {
       data: this.props.data,
+      currentSelectedIndex: this.props.currentSelectedIndex,
     };
   }
 
   template() {
-    return `<ul class='word-List'></ul>`;
+    const { data, currentSelectedIndex } = this.state;
+    return `
+    <ul>
+      ${data
+        .map(
+          (word, index) =>
+            `<li data-id="suggestionItem" class=${
+              currentSelectedIndex === index ? 'Suggestion__item--selected' : ''
+            }>${word}</li>`
+        )
+        .join('')}
+    </ul>
+   `;
+  }
+
+  setVisibility(hasData) {
+    if (hasData) {
+      this.$target.style.display = 'block';
+    } else {
+      this.$target.style.display = 'none';
+    }
   }
 
   mounted() {
     const { data } = this.state;
-    const $wordList = this.$target.querySelector('.word-List');
-
-    if (!data.length) {
-      this.$target.style.display = 'none';
-      return;
-    }
-
-    this.$target.style.display = 'block';
-    $wordList.innerHTML = '';
-    data.map((word) => {
-      new WordItem($wordList, { word });
-    });
+    this.setVisibility(data.length);
   }
 
   setEvent() {
-    const { onSelectWord } = this.props;
+    const { onClickWord } = this.props;
     this.addEventToTarget('click', `[data-id='suggestionItem']`, (e) => {
-      onSelectWord(e);
+      onClickWord(e);
     });
   }
 }

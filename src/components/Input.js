@@ -8,9 +8,13 @@ class Input extends Component {
   }
 
   setEvent() {
+    this.$target.addEventListener('submit', (e) => {
+      e.preventDefault();
+    });
     const $input = this.$target.querySelector('.SearchInput__input');
     $input.addEventListener('keyup', (e) => {
       this.props.onInput(e);
+      this.props.onPressKey(e);
     });
   }
 }
