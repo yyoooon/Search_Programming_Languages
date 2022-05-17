@@ -6,19 +6,29 @@ class WordList extends Component {
     this.state = {
       data: this.props.data,
       currentSelectedIndex: this.props.currentSelectedIndex,
+      currentInputText: this.props.currentInputText,
     };
   }
 
+  highlightText(word, highlightText) {
+    return word.replace(
+      highlightText,
+      `<span class="Suggestion__item--matched">${highlightText}</span>`
+    );
+  }
+
   template() {
-    const { data, currentSelectedIndex } = this.state;
+    const { data, currentSelectedIndex, currentInputText } = this.state;
     return `
     <ul>
       ${data
         .map(
-          (word, index) =>
+          (word, wordIndex) =>
             `<li data-id="suggestionItem" class=${
-              currentSelectedIndex === index ? 'Suggestion__item--selected' : ''
-            }>${word}</li>`
+              currentSelectedIndex === wordIndex
+                ? 'Suggestion__item--selected'
+                : ''
+            }>${this.highlightText(word, currentInputText)}</li>`
         )
         .join('')}
     </ul>

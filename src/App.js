@@ -11,6 +11,7 @@ class App extends Component {
       searchData: [],
       selectedWords: [],
       currentSelectedWordIndex: 0,
+      currentInputText: '',
     };
   }
 
@@ -28,7 +29,7 @@ class App extends Component {
       return;
     }
     const result = await getSearchResults(value);
-    this.setState({ searchData: result }, true);
+    this.setState({ searchData: result, currentInputText: value }, true);
   }
 
   handlePressKey(e) {
@@ -64,7 +65,12 @@ class App extends Component {
   }
 
   mounted() {
-    const { searchData, selectedWords, currentSelectedWordIndex } = this.state;
+    const {
+      searchData,
+      selectedWords,
+      currentSelectedWordIndex,
+      currentInputText,
+    } = this.state;
 
     const $form = this.$target.querySelector('.SearchInput');
     const $wordList = this.$target.querySelector('.Suggestion');
@@ -77,6 +83,7 @@ class App extends Component {
     this.WordList = new WordList($wordList, {
       data: searchData,
       currentSelectedIndex: currentSelectedWordIndex,
+      currentInputText: currentInputText,
       onClickWord: this.handleClickWord.bind(this),
     });
     this.SelectedList = new SelectedList($selectedList, {
@@ -93,10 +100,16 @@ class App extends Component {
   }
 
   childUpdate() {
-    const { searchData, selectedWords, currentSelectedWordIndex } = this.state;
+    const {
+      searchData,
+      selectedWords,
+      currentSelectedWordIndex,
+      currentInputText,
+    } = this.state;
     this.WordList.setState({
       data: searchData,
       currentSelectedIndex: currentSelectedWordIndex,
+      currentInputText,
     });
     this.SelectedList.setState({
       items: this.limitFiveLength(selectedWords),
