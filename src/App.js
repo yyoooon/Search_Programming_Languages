@@ -4,35 +4,50 @@ import WordList from './components/WordList.js';
 import SelectedList from './components/SelectedList.js';
 import { getSearchResults } from './api/apis.js';
 import { upCount, downCount } from './utils/circulateCount.js';
+import debounce from './utils/debounce.js';
+import { getItem, setItem } from './utils/storage.js';
 
 class App extends Component {
+  cachData = getItem('search_word_cach', {});
+
   setup() {
-    this.state = {
+    this.state = getItem('state_cach', {
       searchData: [],
       selectedWords: [],
       currentSelectedWordIndex: 0,
       currentInputText: '',
-    };
+    });
   }
 
   selectWord(word) {
-    alert(word);
     const { selectedWords } = this.state;
+
+    alert(word);
+
     if (selectedWords.includes(word)) return;
     this.setState({ selectedWords: [...selectedWords, word] }, true);
   }
 
-  time = null;
   handleInput(e) {
-    if (this.time) clearTimeout(this.time);
-
-    this.time = setTimeout(async () => {
+    debounce(async () => {
+      let result = [];
       const { value } = e.target;
+
       if (!value) {
         this.setState({ searchData: [], selectedWords: [] }, true);
         return;
       }
-      const result = await getSearchResults(value);
+
+      if (this.cachData[value]) {
+        result = this.cachData[value];
+      } else {
+        result = await getSearchResults(value);
+        if (result.length) {
+          this.cachData[value] = result;
+          setItem('search_word_cach', this.cachData);
+        }
+      }
+
       this.setState({ searchData: result, currentInputText: value }, true);
     }, 500);
   }
@@ -120,6 +135,8 @@ class App extends Component {
     this.SelectedList.setState({
       items: this.limitFiveLength(selectedWords),
     });
+
+    setItem('state_cach', this.state);
   }
 }
 

@@ -88,5 +88,3 @@ export default class Component {
     childUpdate ? this.childUpdate() : this.render();
   }
 }
-
-// 각 props의 속성 값을 구독 하려면 prop으로 넘겨받으면 안되고 직접 가져다가 써야함
