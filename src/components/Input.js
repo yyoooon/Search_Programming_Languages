@@ -6,10 +6,10 @@ class Input extends Component {
 
   template() {
     return `
-         <input class="SearchInput__input" type="text" placeholder="프로그램 언어를 입력하세요." value=${getItem(
+         <input class="SearchInput__input" type="text" placeholder="프로그램 언어를 입력하세요." autofocus value=${getItem(
            'input_value_cach',
            ''
-         )} autofocus>
+         )}>
         `;
   }
 
